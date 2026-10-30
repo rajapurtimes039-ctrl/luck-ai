@@ -1,0 +1,85 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LUV AI</title>
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;background:#101827;color:white;
+ font-family:Arial,sans-serif;
+ display:flex;justify-content:center;
+ min-height:100vh;
+}
+.app{width:100%;max-width:600px;padding:20px}
+header{text-align:center;padding:25px}
+h1{color:#67e8f9;font-size:38px;margin:5px}
+header p{color:#9ca3af}
+#chat{
+ height:60vh;overflow-y:auto;
+ background:#1e293b;border-radius:15px;
+ padding:15px;
+}
+.msg{padding:12px;margin:10px 0;
+ border-radius:12px;max-width:85%;
+ line-height:1.5;overflow-wrap:anywhere}
+.user{background:#075985;margin-left:auto}
+.ai{background:#334155}
+.controls{display:flex;gap:8px;margin-top:15px}
+input{
+ flex:1;min-width:0;padding:14px;
+ border-radius:10px;border:0;font-size:16px
+}
+button{
+ background:#06b6d4;color:#06202a;
+ border:0;padding:14px;border-radius:10px;
+ font-weight:bold
+}
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+<h1>LUV AI</h1>
+<p>Your Personal AI Assistant</p>
+</header>
+<div id="chat">
+<div class="msg ai">
+Hello! 👋 I am LUV AI.<br>
+Your personal AI assistant.<br>
+How can I help you today?
+</div>
+</div>
+<div class="controls">
+<input id="message" placeholder="Ask LUV AI anything...">
+<button onclick="sendMessage()">Send</button>
+</div>
+</div>
+<script>
+function sendMessage(){
+ const input=document.getElementById("message");
+ const chat=document.getElementById("chat");
+ const value=input.value.trim();
+ if(!value)return;
+
+ const user=document.createElement("div");
+ user.className="msg user";
+ user.textContent=value;
+ chat.appendChild(user);
+
+ const reply=document.createElement("div");
+ reply.className="msg ai";
+ reply.textContent="I received your message! My AI brain is being connected. 🧠";
+ chat.appendChild(reply);
+
+ input.value="";
+ chat.scrollTop=chat.scrollHeight;
+}
+document.getElementById("message").addEventListener(
+ "keydown",e=>{if(e.key==="Enter")sendMessage()}
+);
+</script>
+</body>
+</html>
