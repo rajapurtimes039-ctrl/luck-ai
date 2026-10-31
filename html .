@@ -1,0 +1,131 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LUV AI - Memory System</title>
+<style>
+body{margin:0;background:#101827;color:white;font-family:Arial;padding:20px}
+main{max-width:600px;margin:auto}
+h1{text-align:center;color:#67e8f9}
+p{color:#cbd5e1}
+.panel{background:#1e293b;padding:15px;border-radius:14px;margin:15px 0}
+input{width:100%;padding:13px;box-sizing:border-box;border:0;border-radius:9px;margin:7px 0}
+button{padding:12px;background:#06b6d4;border:0;border-radius:8px;margin:5px;cursor:pointer}
+.item{background:#334155;padding:10px;margin:8px 0;border-radius:8px;overflow-wrap:anywhere}
+small{color:#94a3b8}
+</style>
+</head>
+<body>
+<main>
+<h1>🧠 LUV AI</h1>
+<p style="text-align:center">Your Personal AI Memory</p>
+
+<div class="panel">
+<h3>Save a Memory</h3>
+<input id="memory" placeholder="What should LUV AI remember?">
+<button onclick="saveMemory()">Save Memory</button>
+</div>
+
+<div class="panel">
+<h3>My Memories</h3>
+<div id="memories"></div>
+<button onclick="clearMemories()">Clear All Memories</button>
+</div>
+
+<div class="panel">
+<h3>Chat History</h3>
+<input id="chat" placeholder="Write a message...">
+<button onclick="saveChat()">Save Chat</button>
+<div id="history"></div>
+<button onclick="clearChat()">Clear Chat History</button>
+</div>
+
+<p><small>Memory is stored in this browser on this device.</small></p>
+</main>
+
+<script>
+const getData = key => {
+ try { return JSON.parse(localStorage.getItem(key)||"[]"); }
+ catch(e) { return []; }
+};
+
+function saveMemory(){
+ const input=document.getElementById("memory");
+ const value=input.value.trim();
+ if(!value)return;
+ const data=getData("luv_memories");
+ data.push({text:value,date:new Date().toLocaleString()});
+ localStorage.setItem("luv_memories",JSON.stringify(data));
+ input.value="";
+ showMemories();
+}
+
+function showMemories(){
+ const box=document.getElementById("memories");
+ const data=getData("luv_memories");
+ box.innerHTML="";
+ data.forEach((item,i)=>{
+ const div=document.createElement("div");
+ div.className="item";
+ div.textContent=item.text+" — "+item.date;
+ const del=document.createElement("button");
+ del.textContent="Delete";
+ del.onclick=()=>deleteMemory(i);
+ div.appendChild(del);
+ box.appendChild(div);
+ });
+ if(!data.length)box.textContent="No memories saved yet.";
+}
+
+function deleteMemory(i){
+ const data=getData("luv_memories");
+ data.splice(i,1);
+ localStorage.setItem("luv_memories",JSON.stringify(data));
+ showMemories();
+}
+
+function clearMemories(){
+ if(confirm("Delete all saved memories?")){
+ localStorage.removeItem("luv_memories");
+ showMemories();
+ }
+}
+
+function saveChat(){
+ const input=document.getElementById("chat");
+ const value=input.value.trim();
+ if(!value)return;
+ const data=getData("luv_chats");
+ data.push({text:value,date:new Date().toLocaleString()});
+ localStorage.setItem("luv_chats",JSON.stringify(data));
+ input.value="";
+ showChats();
+}
+
+function showChats(){
+ const box=document.getElementById("history");
+ box.innerHTML="";
+ const data=getData("luv_chats");
+ data.forEach(item=>{
+ const div=document.createElement("div");
+ div.className="item";
+ div.textContent=item.text+" — "+item.date;
+ box.appendChild(div);
+ });
+ if(!data.length)box.textContent="No chat history yet.";
+}
+
+function clearChat(){
+ if(confirm("Delete all chat history?")){
+ localStorage.removeItem("luv_chats");
+ showChats();
+ }
+}
+
+showMemories();
+showChats();
+</script>
+</body>
+</html>
